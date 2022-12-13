@@ -10,6 +10,8 @@
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/9.9.2/jsoneditor.min.css" rel="stylesheet" type="text/css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/9.9.2/jsoneditor.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.2.min.js"></script>
 </head>
 
 <body>

@@ -97,12 +97,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ArtARTs36/php-merge-request-linter.git",
-                "reference": "ad08394680e4baa5fc7f1e95688e0733af6e9c12"
+                "reference": "99181ea729a580db825b5666e80ca3b78b5062b5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ArtARTs36/php-merge-request-linter/zipball/ad08394680e4baa5fc7f1e95688e0733af6e9c12",
-                "reference": "ad08394680e4baa5fc7f1e95688e0733af6e9c12",
+                "url": "https://api.github.com/repos/ArtARTs36/php-merge-request-linter/zipball/99181ea729a580db825b5666e80ca3b78b5062b5",
+                "reference": "99181ea729a580db825b5666e80ca3b78b5062b5",
                 "shasum": ""
             },
             "require": {
@@ -144,7 +144,7 @@
                 "issues": "https://github.com/ArtARTs36/php-merge-request-linter/issues",
                 "source": "https://github.com/ArtARTs36/php-merge-request-linter/tree/conditions"
             },
-            "time": "2022-12-13T20:28:31+00:00"
+            "time": "2022-12-13T23:23:28+00:00"
         },
         {
             "name": "artarts36/str",

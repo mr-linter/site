@@ -30,7 +30,7 @@ class LinterProvider extends ServiceProvider
         });
 
         $this->app->bind(OperatorResolver::class, static function () {
-            return new OperatorFactory(DefaultOperators::map(), new PropertyExtractor());
+            return new OperatorResolver(new OperatorFactory(DefaultOperators::map(), new PropertyExtractor()));
         });
 
         $this->app->bind(RulesMapper::class, static function (Application $app) {
