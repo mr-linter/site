@@ -1,13 +1,25 @@
 <div id="tester">
     <div class="container">
         <form id="merge-request-tester-form">
-            <div class="row">
+            <div class="row" style="padding-bottom: 10px">
                 <div class="col">
                     @include('components/mr')
                 </div>
 
                 <div class="col">
                     @include('components/json_editor')
+                </div>
+            </div>
+
+            <div class="card" style="border-radius: 0">
+                <h5 class="card-header">Result</h5>
+                <div class="card-body">
+                    <table class="table bordered">
+                        <tr>
+                            <td>#</td>
+                            <td>Description</td>
+                        </tr>
+                    </table>
                 </div>
             </div>
 
