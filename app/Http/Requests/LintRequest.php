@@ -22,6 +22,7 @@ final class LintRequest extends FormRequest
             'mergeRequest.source_branch' => 'required|string',
             'mergeRequest.target_branch' => 'required|string',
             'mergeRequest.changed_files_count' => 'required|integer',
+            'config' => 'required|array',
         ];
     }
 

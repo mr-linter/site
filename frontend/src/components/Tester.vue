@@ -25,6 +25,7 @@
 import MergeRequest from '../components/MergeRequest'
 import LintResult from '../components/LintResult'
 import ConfigEditor from "./ConfigEditor";
+import axios from 'axios';
 
 export default {
   components: {ConfigEditor, LintResult, MergeRequest},
@@ -91,7 +92,11 @@ export default {
   },
   methods: {
     lintRequest() {
-      console.log(this.merge_request)
+      axios.post('http://localhost:8000/api/linter/lint', {
+        config: JSON.parse(this.lint_config),
+        mergeRequest: this.merge_request,
+      })
+        .then(response => console.log(response));
     }
   }
 }
