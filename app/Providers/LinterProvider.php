@@ -2,44 +2,85 @@
 
 namespace App\Providers;
 
-use ArtARTs36\MergeRequestLinter\Configuration\Loader\RulesMapper;
-use ArtARTs36\MergeRequestLinter\Rule\Condition\DefaultOperators;
-use ArtARTs36\MergeRequestLinter\Rule\Condition\OperatorFactory;
-use ArtARTs36\MergeRequestLinter\Rule\Condition\OperatorResolver;
-use ArtARTs36\MergeRequestLinter\Rule\DefaultRules;
-use ArtARTs36\MergeRequestLinter\Rule\Factory\Argument\Builder;
-use ArtARTs36\MergeRequestLinter\Rule\Factory\Argument\DefaultResolvers;
-use ArtARTs36\MergeRequestLinter\Rule\Factory\Constructor\ConstructorFinder;
-use ArtARTs36\MergeRequestLinter\Rule\Factory\Resolver;
-use ArtARTs36\MergeRequestLinter\Rule\Factory\RuleFactory;
-use ArtARTs36\MergeRequestLinter\Support\PropertyExtractor;
+use App\Service\Event\PsrLaravelDispatcherAdapter;
+use ArtARTs36\MergeRequestLinter\Application\Condition\Evaluators\DefaultEvaluators;
+use ArtARTs36\MergeRequestLinter\Application\Rule\Rules\DefaultRules;
+use ArtARTs36\MergeRequestLinter\Domain\Condition\EvaluatingSubjectFactory;
+use ArtARTs36\MergeRequestLinter\Domain\Metrics\MetricManager;
+use ArtARTs36\MergeRequestLinter\Infrastructure\Condition\CallbackPropertyExtractor;
+use ArtARTs36\MergeRequestLinter\Infrastructure\Condition\Evaluator\Creator\ChainFactory;
+use ArtARTs36\MergeRequestLinter\Infrastructure\Condition\Evaluator\Creator\EvaluatorCreator;
+use ArtARTs36\MergeRequestLinter\Infrastructure\Condition\EvaluatorFactory;
+use ArtARTs36\MergeRequestLinter\Infrastructure\Condition\Subject\SubjectFactory;
+use ArtARTs36\MergeRequestLinter\Infrastructure\Configuration\Loader\Mapper\RulesMapper;
+use ArtARTs36\MergeRequestLinter\Infrastructure\Contracts\Condition\OperatorResolver;
+use ArtARTs36\MergeRequestLinter\Infrastructure\Contracts\Condition\PropertyExtractor;
+use ArtARTs36\MergeRequestLinter\Infrastructure\Contracts\Rule\RuleResolver;
+use ArtARTs36\MergeRequestLinter\Infrastructure\Contracts\Text\MarkdownCleaner;
+use ArtARTs36\MergeRequestLinter\Infrastructure\Metrics\Manager\MemoryMetricManager;
+use ArtARTs36\MergeRequestLinter\Infrastructure\Rule\Argument\ArgumentResolverFactory;
+use ArtARTs36\MergeRequestLinter\Infrastructure\Rule\Argument\Builder;
+use ArtARTs36\MergeRequestLinter\Infrastructure\Rule\Constructor\ConstructorFinder;
+use ArtARTs36\MergeRequestLinter\Infrastructure\Rule\Factories\ConditionRuleFactory;
+use ArtARTs36\MergeRequestLinter\Infrastructure\Rule\Factories\RuleFactory;
+use ArtARTs36\MergeRequestLinter\Infrastructure\Rule\Resolver;
+use ArtARTs36\MergeRequestLinter\Infrastructure\Text\Cleaner\LeagueMarkdownCleaner;
+use ArtARTs36\MergeRequestLinter\Shared\Contracts\DataStructure\Map;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use League\CommonMark\CommonMarkConverter;
+use League\CommonMark\ConverterInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 
 class LinterProvider extends ServiceProvider
 {
+    public array $bindings = [
+        EvaluatingSubjectFactory::class => SubjectFactory::class,
+        PropertyExtractor::class => CallbackPropertyExtractor::class,
+        OperatorResolver::class => \ArtARTs36\MergeRequestLinter\Infrastructure\Condition\OperatorResolver::class,
+        MetricManager::class => MemoryMetricManager::class,
+        EventDispatcherInterface::class => PsrLaravelDispatcherAdapter::class,
+        MarkdownCleaner::class => LeagueMarkdownCleaner::class,
+        ConverterInterface::class => CommonMarkConverter::class,
+    ];
+
     public function register()
     {
-        $this->app->bind(RuleFactory::class, static function () {
+        $this
+            ->app
+            ->when(ChainFactory::class)
+            ->needs(Map::class)
+            ->give(static fn () => DefaultEvaluators::map());
+
+        $this
+            ->app
+            ->when(EvaluatorFactory::class)
+            ->needs(EvaluatorCreator::class)
+            ->give(static function (Application $app) {
+                return $app->make(ChainFactory::class)->create();
+            });
+
+        $this->app->bind(RuleFactory::class, static function (Application $app) {
             return new RuleFactory(
                 new Builder(
-                    DefaultResolvers::get(),
+                    (new ArgumentResolverFactory($app))->create(),
                 ),
                 new ConstructorFinder(),
             );
         });
 
-        $this->app->bind(OperatorResolver::class, static function () {
-            return new OperatorResolver(new OperatorFactory(DefaultOperators::map(), new PropertyExtractor()));
+        $this->app->bind(Resolver::class, static function (Application $app) {
+            return new Resolver(
+                DefaultRules::map(),
+                $app->make(RuleFactory::class),
+                $app->make(ConditionRuleFactory::class),
+            );
         });
 
-        $this->app->bind(RulesMapper::class, static function (Application $app) {
-            return new RulesMapper(
-                new Resolver(
-                    DefaultRules::map(),
-                    $app->make(RuleFactory::class),
-                    $app->make(OperatorResolver::class),
-                ),
+        $this->app->bind(ConditionRuleFactory::class, static function (Application $app) {
+            return ConditionRuleFactory::new(
+                $app->make(OperatorResolver::class),
+                $app->make(MetricManager::class),
             );
         });
     }

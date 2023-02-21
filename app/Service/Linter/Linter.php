@@ -2,27 +2,32 @@
 
 namespace App\Service\Linter;
 
-use ArtARTs36\MergeRequestLinter\Configuration\Loader\RulesMapper;
-use ArtARTs36\MergeRequestLinter\Linter\Event\NullLintEventSubscriber;
-use ArtARTs36\MergeRequestLinter\Linter\Linter as MrLinter;
-use ArtARTs36\MergeRequestLinter\Linter\LintResult;
-use ArtARTs36\MergeRequestLinter\Linter\Runner\Runner;
-use ArtARTs36\MergeRequestLinter\Linter\StaticMergeRequestFetcher;
-use ArtARTs36\MergeRequestLinter\Request\MergeRequest;
+use ArtARTs36\MergeRequestLinter\Application\Linter\Runner;
+use ArtARTs36\MergeRequestLinter\Domain\Linter\LintResult;
+use ArtARTs36\MergeRequestLinter\Domain\Request\MergeRequest;
+use ArtARTs36\MergeRequestLinter\Infrastructure\Configuration\Loader\Mapper\RulesMapper;
+use ArtARTs36\MergeRequestLinter\Infrastructure\Linter\LinterFactory;
+use ArtARTs36\MergeRequestLinter\Infrastructure\RequestFetcher\MemoryRequestFetcher;
+use ArtARTs36\MergeRequestLinter\Shared\DataStructure\Set;
+use ArtARTs36\Str\Str;
 
 class Linter
 {
     public function __construct(
         private RulesMapper $rulesMapper,
+        private LinterFactory $factory,
+        private MergeRequestFactory $requestFactory,
     ) {
         //
     }
 
     public function run(array $configData, array $mergeRequest): LintResult
     {
-        $linter = new MrLinter($this->rulesMapper->map($configData['rules']), new NullLintEventSubscriber());
+        $linter = $this->factory->create($this->rulesMapper->map($configData['rules']));
 
-        $runner = new Runner(new StaticMergeRequestFetcher(MergeRequest::fromArray($mergeRequest)));
+        $runner = new Runner(new MemoryRequestFetcher(
+            $this->requestFactory->create($mergeRequest),
+        ));
 
         return $runner->run($linter);
     }

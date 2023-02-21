@@ -2,8 +2,8 @@
 
 namespace App\Http\Responses;
 
-use ArtARTs36\MergeRequestLinter\Contracts\Note;
-use ArtARTs36\MergeRequestLinter\Linter\LintResult;
+use ArtARTs36\MergeRequestLinter\Domain\Linter\LintResult;
+use ArtARTs36\MergeRequestLinter\Domain\Note\Note;
 use Illuminate\Contracts\Support\Arrayable;
 
 class LintResponse implements Arrayable
@@ -24,7 +24,7 @@ class LintResponse implements Arrayable
         foreach ($this->result->notes as $note) {
             $notes[] = [
                 'note' => $note->getDescription(),
-                'severity' => $note->getColor()->value,
+                'severity' => $note->getSeverity(),
             ];
         }
 
