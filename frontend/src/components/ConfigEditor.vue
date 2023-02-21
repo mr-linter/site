@@ -4,7 +4,7 @@
       JSON Config Editor
     </div>
     <div class="edit-form">
-      <textarea class="config-editor-textarea" v-model="lint_config"></textarea>
+      <textarea class="config-editor-textarea" v-model="lint_config.definition"></textarea>
     </div>
   </div>
 </template>
@@ -12,7 +12,7 @@
 <script>
 export default {
   props: {
-    lint_config: String,
+    lint_config: Object,
   }
 }
 </script>

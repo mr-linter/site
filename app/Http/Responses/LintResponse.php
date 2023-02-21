@@ -2,6 +2,7 @@
 
 namespace App\Http\Responses;
 
+use ArtARTs36\MergeRequestLinter\Contracts\Note;
 use ArtARTs36\MergeRequestLinter\Linter\LintResult;
 use Illuminate\Contracts\Support\Arrayable;
 
@@ -13,14 +14,17 @@ class LintResponse implements Arrayable
         //
     }
 
-    public function toArray()
+    public function toArray(): array
     {
         $notes = [];
 
+        /**
+         * @var Note $note
+         */
         foreach ($this->result->notes as $note) {
             $notes[] = [
-                'description' => $note->getDescription(),
-                'color' => $note->getColor()->value,
+                'note' => $note->getDescription(),
+                'severity' => $note->getColor()->value,
             ];
         }
 
