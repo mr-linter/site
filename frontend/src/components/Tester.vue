@@ -14,6 +14,8 @@
 
       <lint-result v-if="lint_result" v-bind:result="lint_result"></lint-result>
 
+      <ValidationFails v-if="validation_fails !== null" v-bind:fails="validation_fails"></ValidationFails>
+
       <div class="d-grid gap-2" style="padding-top: 10px">
         <button class="btn btn-primary" type="button" @click="lintRequest">Test</button>
       </div>
@@ -24,11 +26,12 @@
 <script>
 import MergeRequest from '../components/MergeRequest'
 import LintResult from '../components/LintResult'
+import ValidationFails from '../components/ValidationFails'
 import ConfigEditor from "./ConfigEditor";
 import axios from 'axios';
 
 export default {
-  components: {ConfigEditor, LintResult, MergeRequest},
+  components: {ConfigEditor, LintResult, MergeRequest, ValidationFails},
   data: () => {
     return {
       merge_request: {
@@ -39,6 +42,8 @@ export default {
         source_branch: 'dev',
         target_branch: 'master'
       },
+      lint_result: null,
+      validation_fails: null,
       lint_config: {
         definition: "{\n" +
           "  \"rules\": {\n" +
@@ -89,7 +94,6 @@ export default {
           "  }\n" +
           "}",
       },
-      lint_result: null,
     }
   },
   methods: {
@@ -98,7 +102,11 @@ export default {
         config: JSON.parse(this.lint_config.definition),
         mergeRequest: this.merge_request,
       })
-        .then(response => this.lint_result = response.data);
+        .then(response => this.lint_result = response.data)
+        .catch((error) => {
+          console.log(error.response.data.errors)
+          this.validation_fails = error.response.data.errors;
+        })
     }
   }
 }
