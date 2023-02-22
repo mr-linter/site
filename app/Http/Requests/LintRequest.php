@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Validators\JsonSchemaRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 final class LintRequest extends FormRequest
@@ -22,7 +23,13 @@ final class LintRequest extends FormRequest
             'mergeRequest.source_branch' => 'required|string',
             'mergeRequest.target_branch' => 'required|string',
             'mergeRequest.changed_files_count' => 'required|integer',
-            'config' => 'required|array|json_schema:mr_linter_config',
+            'config' => [
+                'required',
+                'array',
+                $this->container->make(JsonSchemaRule::class, [
+                    'schemaName' => 'mr_linter_config',
+                ]),
+            ],
         ];
     }
 

@@ -3,50 +3,37 @@
 namespace App\Http\Validators;
 
 use App\Service\JsonSchema\Storage;
-use Opis\JsonSchema\ValidationResult;
-use Opis\JsonSchema\Validator;
+use JsonSchema\Validator;
 
 class JsonSchemaValidator
 {
-    private array $errors = [];
-
     public function __construct(
         private Storage $storage,
-        private Validator $validator,
     ) {
         //
     }
 
-    public function validate($attribute, $value, $parameters, $validator): array
+    public function validate(string $schemaName, array $value): array
     {
-        $result = $this->doValidate($parameters[0], $value);
-
-        $error = $result->error();
-
-        if ($error === null) {
-            $this->errors = [];
-
-            return [];
-        }
-
-        $this->errors[] = $error->message();
-
-        foreach ($error->subErrors() as $error) {
-            $this->errors[] = $error->message();
-        }
-
-        return $this->errors;
+        return $this->doValidate($schemaName, $value);
     }
 
-    private function doValidate(string $schemaName, array $value): ValidationResult
+    private function doValidate(string $schemaName, array $value): array
     {
-        $schema = $this->storage->get($schemaName);
+        $schema = (object) json_decode($this->storage->get($schemaName), false);
 
-        return $this->validator->validate($value, $schema);
-    }
+        $val = json_decode(json_encode($value));
 
-    public function message()
-    {
-        return $this->errors;
+        $validator = new Validator();
+        $validator->validate($val, $schema);
+
+        $errors = [];
+        $i = 0;
+
+        foreach ($validator->getErrors() as $error) {
+            $errors[$error['property'] ?? $i++] = $error['message'];
+        }
+
+        return $errors;
     }
 }

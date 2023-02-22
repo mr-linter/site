@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Http\Validators\JsonSchemaRule;
 use App\Http\Validators\JsonSchemaValidator;
 use App\Service\JsonSchema\CacheStorage;
 use App\Service\JsonSchema\FileStorage;
@@ -35,10 +36,5 @@ class JsonSchemaProvider extends ServiceProvider
             });
 
         $this->app->bind(Storage::class, FileStorage::class);
-    }
-
-    public function boot(): void
-    {
-        Validator::extend('json_schema', JsonSchemaValidator::class);
     }
 }
