@@ -102,7 +102,10 @@ export default {
         config: JSON.parse(this.lint_config.definition),
         mergeRequest: this.merge_request,
       })
-        .then(response => this.lint_result = response.data)
+        .then(response => {
+          this.validation_fails = null;
+          this.lint_result = response.data
+        })
         .catch((error) => {
           console.log(error.response.data.errors)
           this.validation_fails = error.response.data.errors;
