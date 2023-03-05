@@ -2,7 +2,7 @@ serve:
 	php artisan serve
 
 docker-build:
-	docker build . ghcr.io/mr-linter/site-backend
+	docker build -t ghcr.io/mr-linter/site-backend .
 
 docker-run:
 	docker-compose up
