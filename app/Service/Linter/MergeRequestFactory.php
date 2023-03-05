@@ -25,7 +25,7 @@ class MergeRequestFactory
         return new MergeRequest(
             Str::make($data['title'] ?? ''),
             new Markdown($description),
-            $description,
+            $this->markdownCleaner->clean($description),
             Set::fromList($data['labels'] ?? []),
             $data['has_conflicts'] ?? false,
             Str::make($data['source_branch'] ?? 'development'),
@@ -33,7 +33,9 @@ class MergeRequestFactory
             new Author(Str::make($data['author']['login'] ?? 'developer')),
             $data['is_draft'] ?? false,
             $data['can_merge'] ?? false,
-            new ArrayMap([]),
+            isset($data['changed_files_count']) ? new ArrayMap(range(0, $data['changed_files_count'])) : new ArrayMap([]),
+            isset($data['created_at']) ? new \DateTimeImmutable($data['created_at']) : new \DateTimeImmutable(),
+            Str::make($data['uri'] ?? ''),
         );
     }
 }

@@ -20,6 +20,8 @@ final class LintRequest extends FormRequest
             'mergeRequest.labels' => 'array',
             'mergeRequest.labels.*' => 'string',
             'mergeRequest.has_conflicts' => 'required',
+            'mergeRequest.is_draft' => 'required',
+            'mergeRequest.can_merge' => 'required',
             'mergeRequest.source_branch' => 'required|string',
             'mergeRequest.target_branch' => 'required|string',
             'mergeRequest.changed_files_count' => 'required|integer',
@@ -36,7 +38,6 @@ final class LintRequest extends FormRequest
     public function getMergeRequest(): array
     {
         $array = $this->input('mergeRequest');
-        $array['has_conflicts'] = isset($array['has_conflicts']) && $array['has_conflicts'] === 'true';
         $array['description'] = $array['description'] ?? '';
         $array['labels'] = $array['labels'] ?? [];
 
