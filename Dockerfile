@@ -74,5 +74,7 @@ RUN set -x \
     # create the symbolic links configured for the application
     && php ./artisan storage:link
 
+EXPOSE 8080
+
 # unset default image entrypoint
 ENTRYPOINT []

@@ -8,7 +8,7 @@ http:
   address: 0.0.0.0:8080
   middleware: ["static", "headers", "gzip"]
   pool:
-    num_workers: 1
+    num_workers: 8
     supervisor:
       exec_ttl: 60s
   headers:
