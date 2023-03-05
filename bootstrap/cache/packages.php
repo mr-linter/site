@@ -52,4 +52,11 @@
       'Flare' => 'Spatie\\LaravelIgnition\\Facades\\Flare',
     ),
   ),
+  'spiral/roadrunner-laravel' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Spiral\\RoadRunnerLaravel\\ServiceProvider',
+    ),
+  ),
 );

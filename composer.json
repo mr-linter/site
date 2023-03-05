@@ -13,7 +13,8 @@
         "laravel/framework": "^10",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
-        "spatie/laravel-ignition": "^2.0"
+        "spatie/laravel-ignition": "^2.0",
+        "spiral/roadrunner-laravel": "^5.11"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
