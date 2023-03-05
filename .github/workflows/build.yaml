@@ -23,7 +23,7 @@ jobs:
           to: ${{ secrets.TELEGRAM_CHAT }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: |
-            🔻 Build failed on commit "${{ github.event.head_commit.message }}" by ${{ github.event.head_commit.author.username }}
+            🔻 Backend build failed on commit "${{ github.event.head_commit.message }}" by ${{ github.event.head_commit.author.username }}
 
             🔗 Commit url: ${{ github.event.head_commit.url }}
 
