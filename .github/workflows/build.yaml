@@ -1,0 +1,30 @@
+name: Build
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Build/Push image
+        run: |
+          make docker-build
+          make docker-push USER=artarts36 TOKEN=${{ secrets.GITHUB_TOKEN }}
+
+      - if: ${{ failure() }}
+        name: Send notification about failed build
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            🔻 Build failed on commit "${{ github.event.head_commit.message }}" by ${{ github.event.head_commit.author.username }}
+
+            🔗 Commit url: ${{ github.event.head_commit.url }}
+
+            🌐 Url to failed job: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
