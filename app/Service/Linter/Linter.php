@@ -4,12 +4,10 @@ namespace App\Service\Linter;
 
 use ArtARTs36\MergeRequestLinter\Application\Linter\Runner;
 use ArtARTs36\MergeRequestLinter\Domain\Linter\LintResult;
-use ArtARTs36\MergeRequestLinter\Domain\Request\MergeRequest;
 use ArtARTs36\MergeRequestLinter\Infrastructure\Configuration\Loader\Mapper\RulesMapper;
 use ArtARTs36\MergeRequestLinter\Infrastructure\Linter\LinterFactory;
 use ArtARTs36\MergeRequestLinter\Infrastructure\RequestFetcher\MemoryRequestFetcher;
-use ArtARTs36\MergeRequestLinter\Shared\DataStructure\Set;
-use ArtARTs36\Str\Str;
+use Illuminate\Support\Facades\Log;
 
 class Linter
 {

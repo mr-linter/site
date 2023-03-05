@@ -1,0 +1,10 @@
+services:
+  mr-linter-backend:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    volumes:
+      - "$PWD:/app:rw"
+    command: rr serve -c .rr.yaml
+    ports:
+      - 8000:8080

@@ -1,0 +1,47 @@
+{
+    "rules": {
+        "@mr-linter/description_contains_links_of_any_domains": {
+            "domains": [
+                "vk.com"
+            ],
+            "when": {
+                "labels1": {
+                    "has": "Feature",
+                    "countMin": 1000
+                }
+            }
+        },
+        "@mr-linter/changed_files_limit": {
+            "limit": 1,
+            "when": {
+                "title": {
+                    "starts": "[Feature] ",
+                    "ends": "es",
+                    "equals": "dd"
+                }
+            }
+        },
+        "@mr-linter/jira/has_issue_link": {
+            "domain": "jira.com",
+            "projectCode": "MYPROJECT",
+            "when": {
+                "labels1": {
+                    "contains": "Feature"
+                },
+                "targetBranch": {
+                    "ends": "er"
+                }
+            }
+        },
+        "@mr-linter/description_not_empty": {
+            "when": {
+                "targetBranch": {
+                    "equals": "master"
+                }
+            }
+        }
+    },
+    "credentials": {
+        "github_actions": "env(MR_LINTER_GITHUB_HTTP_TOKEN)"
+    }
+}
