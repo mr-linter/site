@@ -12,8 +12,12 @@ class FileStorage implements Storage
         //
     }
 
-    public function get(string $name): string
+    public function get(string $name): JsonObject
     {
-        return $this->files->get(sprintf('%s.json', $name));
+        $file = $this->files->get(sprintf('%s.json', $name));
+
+        $schema = (object) json_decode($file, false);
+
+        return new JsonObject($schema);
     }
 }

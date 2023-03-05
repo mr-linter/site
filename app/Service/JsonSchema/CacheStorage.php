@@ -13,7 +13,7 @@ class CacheStorage implements Storage
         //
     }
 
-    public function get(string $name): string
+    public function get(string $name): JsonObject
     {
         return $this->cache->rememberForever($this->createKey($name), function () use ($name) {
             return $this->storage->get($name);

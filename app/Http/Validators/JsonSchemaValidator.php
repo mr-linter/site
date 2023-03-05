@@ -3,6 +3,7 @@
 namespace App\Http\Validators;
 
 use App\Service\JsonSchema\Storage;
+use JsonSchema\Constraints\Constraint;
 use JsonSchema\Validator;
 
 class JsonSchemaValidator
@@ -20,12 +21,12 @@ class JsonSchemaValidator
 
     private function doValidate(string $schemaName, array $value): array
     {
-        $schema = (object) json_decode($this->storage->get($schemaName), false);
+        $schema = $this->storage->get($schemaName)->object;
 
         $val = json_decode(json_encode($value));
 
         $validator = new Validator();
-        $validator->validate($val, $schema);
+        $validator->validate($val, $schema, Constraint::CHECK_MODE_COERCE_TYPES);
 
         $errors = [];
         $i = 0;
