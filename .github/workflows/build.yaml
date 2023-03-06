@@ -28,3 +28,42 @@ jobs:
             🔗 Commit url: ${{ github.event.head_commit.url }}
 
             🌐 Url to failed job: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+  deploy:
+    needs:
+      - build
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy
+        uses: nerd4ever/ssh-action@master
+        with:
+          host: ${{ secrets.PROD_SSH_HOST }}
+          user: ${{ secrets.PROD_USER }}
+          key: ${{ secrets.PROD_SSH_KEY }}
+          command: ${{ secrets.PROD_DEPLOY_COMMAND }}
+
+      - if: ${{ failure() }}
+        name: Send notification about failed deploy
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            🔻 Backend deploy failed on commit "${{ github.event.head_commit.message }}" by ${{ github.event.head_commit.author.username }}
+
+            🔗 Commit url: ${{ github.event.head_commit.url }}
+
+            🌐 Url to failed job: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - if: ${{ success() }}
+        name: Send notification about succeed deploy
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            💚 Backend deploy succeed on commit "${{ github.event.head_commit.message }}" by ${{ github.event.head_commit.author.username }}
+
+            ➡️ See new mr-linter.dev

@@ -74,6 +74,8 @@ RUN set -x \
     # create the symbolic links configured for the application
     && php ./artisan storage:link
 
+RUN php artisan route:cache && php artisan config:cache
+
 EXPOSE 8080
 
 # unset default image entrypoint
