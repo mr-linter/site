@@ -8,6 +8,7 @@ use ArtARTs36\MergeRequestLinter\Infrastructure\Configuration\Loader\Mapper\Rule
 use ArtARTs36\MergeRequestLinter\Infrastructure\Linter\LinterFactory;
 use ArtARTs36\MergeRequestLinter\Infrastructure\RequestFetcher\MemoryRequestFetcher;
 use Illuminate\Support\Facades\Log;
+use Psr\Log\LoggerInterface;
 
 class Linter
 {
@@ -15,6 +16,7 @@ class Linter
         private RulesMapper $rulesMapper,
         private LinterFactory $factory,
         private MergeRequestFactory $requestFactory,
+        private LoggerInterface $logger,
     ) {
         //
     }
@@ -23,10 +25,25 @@ class Linter
     {
         $linter = $this->factory->create($this->rulesMapper->map($configData['rules']));
 
+        $this->logger->info('linter started');
+
         $runner = new Runner(new MemoryRequestFetcher(
             $this->requestFactory->create($mergeRequest),
         ));
 
-        return $runner->run($linter);
+        try {
+            $result = $runner->run($linter);
+
+            $this->logger->info('linter finished');
+
+            return $result;
+        } catch (\Throwable $e) {
+            $this->logger->error(sprintf(
+                'linter failed: %s',
+                $e->getMessage(),
+            ));
+
+            throw $e;
+        }
     }
 }
