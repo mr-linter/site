@@ -76,6 +76,8 @@ RUN set -x \
 
 RUN php artisan route:cache
 
+RUN chmod +x /app/rr-run.sh
+
 EXPOSE 8080
 
 # unset default image entrypoint
