@@ -6,7 +6,6 @@ use App\Http\Requests\LintRequest;
 use App\Http\Responses\ShareAnalysisResponse;
 use App\Service\Analysis\AnalysisCreator;
 use App\Service\Analysis\AnalysisPayload;
-use Illuminate\Http\Request;
 
 class ShareAnalysisHandler
 {

@@ -16,4 +16,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('linter/lint', [\App\Http\Handlers\LintHandler::class, 'handle']);
 Route::post('analyses', [\App\Http\Handlers\ShareAnalysisHandler::class, 'share']);
+Route::get('analyses/{id}', [\App\Http\Handlers\ShowAnalysisHandler::class, 'show']);
 
