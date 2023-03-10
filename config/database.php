@@ -123,18 +123,34 @@ return [
 
         'client' => env('REDIS_CLIENT', 'phpredis'),
 
+        'cluster' => true,
+
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
             'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
+            'replication' => true,
+            'persistent' => true,
         ],
 
-        'default' => [
-            'url' => env('REDIS_URL'),
-            'host' => env('REDIS_HOST', '127.0.0.1'),
-            'username' => env('REDIS_USERNAME'),
-            'password' => env('REDIS_PASSWORD'),
-            'port' => env('REDIS_PORT', '6379'),
-            'database' => env('REDIS_DB', '0'),
+        'clusters' => [
+            'default' => [
+                [
+                    'host' => 'redis-node-0',
+                    'username' => env('REDIS_USERNAME'),
+                    'password' => env('REDIS_PASSWORD'),
+                    'port' => env('REDIS_PORT', '6379'),
+                    'alias' => 'master',
+                ],
+                [
+                    'host' => 'redis-node-1',
+                    'username' => env('REDIS_USERNAME'),
+                    'password' => env('REDIS_PASSWORD'),
+                    'port' => env('REDIS_PORT', '6379'),
+                ],
+            ],
+            'options' => [
+                'cluster' => 'redis',
+            ],
         ],
 
         'cache' => [
@@ -145,7 +161,5 @@ return [
             'port' => env('REDIS_PORT', '6379'),
             'database' => env('REDIS_CACHE_DB', '1'),
         ],
-
     ],
-
 ];

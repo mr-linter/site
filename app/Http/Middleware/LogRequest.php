@@ -22,7 +22,7 @@ class LogRequest
         ]);
 
         Log::info(
-            sprintf('Given request at %s', $request->route()),
+            sprintf('Given request at %s %s', $request->method(), $request->url()),
         );
 
         $started = microtime(true);
@@ -30,7 +30,7 @@ class LogRequest
         $result = $next($request);
 
         Log::info(
-            sprintf('Given request at %s', $request->url()),
+            sprintf('Handled request at %s %s', $request->method(), $request->url()),
             [
                 'duration' => microtime(true) - $started,
             ],
