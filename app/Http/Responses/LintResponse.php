@@ -9,6 +9,7 @@ use Illuminate\Contracts\Support\Arrayable;
 class LintResponse implements Arrayable
 {
     public function __construct(
+        private string $linterVersion,
         private LintResult $result,
     ) {
         //
@@ -29,6 +30,7 @@ class LintResponse implements Arrayable
         }
 
         return [
+            'linter_version' => $this->linterVersion,
             'result' => $this->result->state,
             'notes' => $notes,
             'duration' => $this->result->duration,
