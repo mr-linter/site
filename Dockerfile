@@ -1,5 +1,3 @@
-# syntax=docker/dockerfile:1.2
-
 FROM spiralscout/roadrunner:2.12.3 as roadrunner
 FROM php:8.1-alpine
 
