@@ -8,6 +8,7 @@ use App\Repositories\AnalysisRepository;
 use App\Service\Linter\Linter;
 use Illuminate\Http\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use ArtARTs36\MergeRequestLinter\Version;
 
 class ShowAnalysisHandler
 {
@@ -31,6 +32,6 @@ class ShowAnalysisHandler
             $analysis->mergeRequest,
         );
 
-        return new ShowAnalysisResponse($analysis, new LintResponse($result));
+        return new ShowAnalysisResponse($analysis, new LintResponse(Version::VERSION, $result));
     }
 }
