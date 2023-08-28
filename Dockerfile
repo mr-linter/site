@@ -41,7 +41,7 @@ RUN echo -e "\nopcache.enable=1\nopcache.enable_cli=1\nopcache.jit_buffer_size=3
         --gecos "" \
         "appuser" \
     # create directory for application sources and roadrunner unix socket
-    && apk del .build-deps
+    && apk del .build-deps \
     && mkdir -p /app /var/run/rr \
     && chown -R appuser:appuser /app /var/run/rr \
     && chmod -R 777 /var/run/rr
