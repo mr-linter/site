@@ -13,8 +13,8 @@ jobs:
 
       - name: Build/Push image
         run: |
-          make docker-build
-          make docker-push USER=artarts36 TOKEN=${{ secrets.GITHUB_TOKEN }}
+          make build
+          make push USER=artarts36 TOKEN=${{ secrets.GITHUB_TOKEN }}
 
       - if: ${{ failure() }}
         name: Send notification about failed build

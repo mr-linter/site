@@ -26,6 +26,8 @@ use ArtARTs36\MergeRequestLinter\Infrastructure\Text\Cleaner\LeagueMarkdownClean
 use ArtARTs36\MergeRequestLinter\Shared\Contracts\DataStructure\Map;
 use ArtARTs36\MergeRequestLinter\Shared\Metrics\Manager\MemoryMetricManager;
 use ArtARTs36\MergeRequestLinter\Shared\Metrics\Value\MetricManager;
+use ArtARTs36\MergeRequestLinter\Shared\Reflection\Instantiator\Finder;
+use ArtARTs36\MergeRequestLinter\Shared\Reflection\ParameterMapBuilder;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use League\CommonMark\CommonMarkConverter;
@@ -62,10 +64,10 @@ class LinterProvider extends ServiceProvider
 
         $this->app->bind(RuleFactory::class, static function (Application $app) {
             return new RuleFactory(
-                new Builder(
+                new ParameterMapBuilder(
                     (new ArgumentResolverFactory($app))->create(),
                 ),
-                new ConstructorFinder(),
+                new Finder(),
             );
         });
 
