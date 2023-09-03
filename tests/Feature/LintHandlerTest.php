@@ -23,7 +23,7 @@ final class LintHandlerTest extends TestCase
                     'config' => [
                         'rules' => [
                             '@mr-linter/title_starts_with_task_number' => [
-                                'projectCodes' => ['ABC'],
+                                'projectCodes' => [],
                             ],
                         ],
                         'ci' => [
