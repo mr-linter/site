@@ -11,6 +11,9 @@ use ArtARTs36\MergeRequestLinter\Infrastructure\Condition\Evaluator\Creator\Chai
 use ArtARTs36\MergeRequestLinter\Infrastructure\Condition\Evaluator\Creator\EvaluatorCreator;
 use ArtARTs36\MergeRequestLinter\Infrastructure\Condition\EvaluatorFactory;
 use ArtARTs36\MergeRequestLinter\Infrastructure\Condition\Subject\SubjectFactory;
+use ArtARTs36\MergeRequestLinter\Infrastructure\Configuration\Loader\Mapper\ArrayConfigHydrator;
+use ArtARTs36\MergeRequestLinter\Infrastructure\Configuration\Loader\Mapper\CiSettingsMapper;
+use ArtARTs36\MergeRequestLinter\Infrastructure\Configuration\Loader\Mapper\NotificationsMapper;
 use ArtARTs36\MergeRequestLinter\Infrastructure\Configuration\Loader\Mapper\RulesMapper;
 use ArtARTs36\MergeRequestLinter\Infrastructure\Contracts\Condition\OperatorResolver;
 use ArtARTs36\MergeRequestLinter\Infrastructure\Contracts\Condition\PropertyExtractor;
@@ -23,15 +26,18 @@ use ArtARTs36\MergeRequestLinter\Infrastructure\Rule\Factories\ConditionRuleFact
 use ArtARTs36\MergeRequestLinter\Infrastructure\Rule\Factories\RuleFactory;
 use ArtARTs36\MergeRequestLinter\Infrastructure\Rule\Resolver;
 use ArtARTs36\MergeRequestLinter\Infrastructure\Text\Cleaner\LeagueMarkdownCleaner;
-use ArtARTs36\MergeRequestLinter\Shared\Contracts\DataStructure\Map;
+use ArtARTs36\MergeRequestLinter\Shared\DataStructure\Map;
 use ArtARTs36\MergeRequestLinter\Shared\Metrics\Manager\MemoryMetricManager;
 use ArtARTs36\MergeRequestLinter\Shared\Metrics\Value\MetricManager;
 use ArtARTs36\MergeRequestLinter\Shared\Reflection\Instantiator\Finder;
 use ArtARTs36\MergeRequestLinter\Shared\Reflection\ParameterMapBuilder;
+use ArtARTs36\MergeRequestLinter\Shared\Reflection\TypeResolver\ResolverFactory;
+use ArtARTs36\MergeRequestLinter\Shared\Time\LocalClock;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\ConverterInterface;
+use Psr\Clock\ClockInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
 class LinterProvider extends ServiceProvider
@@ -62,10 +68,28 @@ class LinterProvider extends ServiceProvider
                 return $app->make(ChainFactory::class)->create();
             });
 
+        $this
+            ->app
+            ->singleton(NotificationsMapper::class, static function () {
+                return new NotificationsMapper([]);
+            });
+
+        $this
+            ->app
+            ->when(ArrayConfigHydrator::class)
+            ->needs(CiSettingsMapper::class)
+            ->give(function () {
+                return new CiSettingsMapper([]);
+            });
+
+        $this->app->bind(ClockInterface::class, static function (Application $app) {
+            return LocalClock::on($app->get('config')->get('app.timezone'));
+        });
+
         $this->app->bind(RuleFactory::class, static function (Application $app) {
             return new RuleFactory(
                 new ParameterMapBuilder(
-                    (new ArgumentResolverFactory($app))->create(),
+                    (new ResolverFactory($app))->create(),
                 ),
                 new Finder(),
             );
