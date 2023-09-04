@@ -65,7 +65,7 @@ final class LintRequest extends FormRequest
             }
         }
 
-        if ($replaced) {
+        if (! $replaced) {
             return;
         }
 
