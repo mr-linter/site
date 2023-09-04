@@ -6,7 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
-        "artarts36/merge-request-linter": "^0.18.0",
+        "artarts36/merge-request-linter": "^0.18.1",
         "guzzlehttp/guzzle": "^7.2",
         "johnstevenson/json-works": "^1.1",
         "justinrainbow/json-schema": "^5.2",

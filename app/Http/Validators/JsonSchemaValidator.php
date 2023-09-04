@@ -39,7 +39,7 @@ class JsonSchemaValidator
 
     private function doValidate(string $schemaName, object $schema, array $value): array
     {
-        $val = json_decode($jsonVal = json_encode($value, JSON_FORCE_OBJECT));
+        $val = json_decode($jsonVal = json_encode($value));
 
         $this->logger->debug(sprintf(
             '[JsonSchemaValidator] validating value at schema "%s"',

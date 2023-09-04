@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2bb0584c8657063a92368c777c89a533",
+    "content-hash": "9cb928f9cd0ef508d27d30927b5bdd49",
     "packages": [
         {
             "name": "artarts36/context-logger",
@@ -172,16 +172,16 @@
         },
         {
             "name": "artarts36/merge-request-linter",
-            "version": "0.18.0",
+            "version": "0.18.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ArtARTs36/php-merge-request-linter.git",
-                "reference": "22b22c0a0a8d4e6c1b6cad2b58e3d49525d9587e"
+                "reference": "4bdc7d5bc46ee0a008692bd8161fec86949e0c2a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ArtARTs36/php-merge-request-linter/zipball/22b22c0a0a8d4e6c1b6cad2b58e3d49525d9587e",
-                "reference": "22b22c0a0a8d4e6c1b6cad2b58e3d49525d9587e",
+                "url": "https://api.github.com/repos/ArtARTs36/php-merge-request-linter/zipball/4bdc7d5bc46ee0a008692bd8161fec86949e0c2a",
+                "reference": "4bdc7d5bc46ee0a008692bd8161fec86949e0c2a",
                 "shasum": ""
             },
             "require": {
@@ -236,9 +236,9 @@
             "description": "MR Linter - tools for validating merge requests",
             "support": {
                 "issues": "https://github.com/ArtARTs36/php-merge-request-linter/issues",
-                "source": "https://github.com/ArtARTs36/php-merge-request-linter/tree/0.18.0"
+                "source": "https://github.com/ArtARTs36/php-merge-request-linter/tree/0.18.1"
             },
-            "time": "2023-09-03T16:42:08+00:00"
+            "time": "2023-09-04T00:00:17+00:00"
         },
         {
             "name": "artarts36/str",
