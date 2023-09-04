@@ -52,6 +52,8 @@ final class LintRequest extends FormRequest
             return;
         }
 
+        $replaced = false;
+
         foreach ($config['rules'] as &$rule) {
             if (! is_array($rule)) {
                 return;
@@ -59,7 +61,12 @@ final class LintRequest extends FormRequest
 
             if ($rule === []) {
                 $rule = new \stdClass();
+                $replaced = true;
             }
+        }
+
+        if ($replaced) {
+            return;
         }
 
         $this->merge([
