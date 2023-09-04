@@ -43,4 +43,34 @@ final class LintRequest extends FormRequest
 
         return $array;
     }
+
+    protected function prepareForValidation()
+    {
+        $config = $this->input('config');
+
+        if (! is_array($config) || ! array_key_exists('rules', $config) || ! is_array($config['rules'])) {
+            return;
+        }
+
+        $replaced = false;
+
+        foreach ($config['rules'] as &$rule) {
+            if (! is_array($rule)) {
+                return;
+            }
+
+            if ($rule === []) {
+                $rule = new \stdClass();
+                $replaced = true;
+            }
+        }
+
+        if (! $replaced) {
+            return;
+        }
+
+        $this->merge([
+            'config' => $config,
+        ]);
+    }
 }

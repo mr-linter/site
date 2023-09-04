@@ -1,5 +1,5 @@
 FROM spiralscout/roadrunner:2.12.3 as roadrunner
-FROM php:8.1-alpine
+FROM php:8.2-alpine as runtime
 
 FROM composer:2.5.4 as composer
 COPY --from=composer /usr/bin/composer /usr/bin/composer
@@ -46,7 +46,7 @@ RUN echo -e "\nopcache.enable=1\nopcache.enable_cli=1\nopcache.jit_buffer_size=3
     && chown -R appuser:appuser /app /var/run/rr \
     && chmod -R 777 /var/run/rr
 
-# install roadrunner
+# install roadrunnerxr
 COPY --from=roadrunner /usr/bin/rr /usr/bin/rr
 
 # "fix" composer issue "Cannot create cache directory /tmp/composer/cache/..." for docker-compose usage

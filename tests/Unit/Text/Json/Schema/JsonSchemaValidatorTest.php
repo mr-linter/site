@@ -4,6 +4,7 @@ namespace Tests\Unit\Text\Json\Schema;
 
 use App\Http\Validators\JsonSchemaValidator;
 use App\Service\JsonSchema\Storage;
+use Psr\Log\NullLogger;
 use Tests\TestCase;
 
 class JsonSchemaValidatorTest extends TestCase
@@ -24,7 +25,7 @@ class JsonSchemaValidatorTest extends TestCase
      */
     public function testValidate(string $dataPath, string $schemaPath, string $expected): void
     {
-        $validator = new JsonSchemaValidator($this->mockStorage($schemaPath));
+        $validator = new JsonSchemaValidator($this->mockStorage($schemaPath), new NullLogger());
 
         self::assertEquals(
             json_decode(file_get_contents($expected), true),
